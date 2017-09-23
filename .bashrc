@@ -173,6 +173,7 @@ alias da='docker_attach'
 alias dsl='docker swarm logs --tail 100'
 alias ds='docker service ls'
 alias dsg='docker service ls | grep'
+alias dcg='docker container ls | grep'
 alias drms='docker service rm `docker service ls -q`'
 
 # GIT
