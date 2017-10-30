@@ -23,5 +23,8 @@ kubectl taint nodes --all node-role.kubernetes.io/master- >> startup_log.txt
 curl -sSL https://github.com/ericstoekl/faas-netes/archive/replicaStatus.zip > replicaStatus.zip
 unzip replicaStatus.zip
 cd faas-netes-replicaStatus/
-#kubectl apply -f ./faas.yml,monitoring.yml
-#kubectl apply -f ./rbac.yml
+kubectl apply -f ./faas.yml,monitoring.yml
+kubectl apply -f ./rbac.yml
+
+# Get the cli
+curl -sL https://cli.openfaas.com | sudo sh
