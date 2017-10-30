@@ -170,11 +170,28 @@ function docker_attach() {
     docker exec -i -t $1 /bin/$2
 }
 alias da='docker_attach'
-alias dsl='docker swarm logs --tail 100'
+alias dsl='docker service logs'
 alias ds='docker service ls'
 alias dsg='docker service ls | grep'
+alias dcl='docker container ls'
 alias dcg='docker container ls | grep'
 alias drms='docker service rm `docker service ls -q`'
+alias di='docker images'
+
+alias de='env|grep DOCKER'
+
+function docker_set_env() {
+    eval "$(docker-machine env $1)"
+}
+alias dse='docker_set_env'
+
+function docker_unset_env() {
+    unset DOCKER_TLS_VERIFY
+    unset DOCKER_CERT_PATH
+    unset DOCKER_MACHINE_NAME
+    unset DOCKER_HOST
+}
+alias due='docker_unset_env'
 
 # GIT
 
