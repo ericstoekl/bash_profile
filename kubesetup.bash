@@ -11,7 +11,7 @@ sudo kubeadm init --pod-network-cidr=10.244.0.0/16 --apiserver-advertise-address
 #su ubuntu
 mkdir -p $HOMEDIR/.kube
 sudo cp -i /etc/kubernetes/admin.conf $HOMEDIR/.kube/config
-sudo chown $(id -u):$(id -g) $HOMEDIR/.kube/config
+sudo chown 1000:1000 $HOMEDIR/.kube/config
 
 kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml >> startup_log.txt
 kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/k8s-manifests/kube-flannel-rbac.yml >> startup_log.txt
