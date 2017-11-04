@@ -23,7 +23,7 @@ kubectl taint nodes --all node-role.kubernetes.io/master- >> startup_log.txt
 git clone https://github.com/ericstoekl/faas-netes
 
 cd faas-netes/
-git checkout -b replicaStatus origin/replicaStatus
+git checkout -b replicaStatus_1 origin/replicaStatus_1
 kubectl apply -f ./faas.yml,monitoring.yml
 kubectl apply -f ./rbac.yml
 
