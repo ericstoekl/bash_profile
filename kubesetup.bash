@@ -20,7 +20,6 @@ kubectl taint nodes --all node-role.kubernetes.io/master- >> startup_log.txt
 
 
 # FAAS
-curl -sSL https://github.com/ericstoekl/faas-netes/archive/replicaStatus.zip > replicaStatus.zip
 git clone https://github.com/ericstoekl/faas-netes
 
 cd faas-netes/
