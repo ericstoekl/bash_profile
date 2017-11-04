@@ -199,6 +199,10 @@ export GIT_EDITOR='vim'
 
 alias gbl='git branch -l'
 alias gcnb='git checkout -b'
+function git_checkout_remote_branch () {
+	git checkout -b $1 origin/$1
+}
+alias gcnbr='git_checkout_remote_branch'
 alias gs='git status'
 alias gsh='git show'
 alias gl='git log'
