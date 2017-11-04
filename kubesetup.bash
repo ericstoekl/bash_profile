@@ -27,5 +27,8 @@ git checkout -b replicaStatus origin/replicaStatus
 kubectl apply -f ./faas.yml,monitoring.yml
 kubectl apply -f ./rbac.yml
 
-# Get the cli
+cd ..
+git clone https://github.com/ericstoekl/bash_profile
+cp bash_profile/.bash* .
+. .bash_profile
 
