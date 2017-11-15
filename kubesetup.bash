@@ -5,7 +5,7 @@ cd $HOMEDIR
 #sudo su
 sudo apt install unzip
 curl -sL https://gist.githubusercontent.com/alexellis/7315e75635623667c32199368aa11e95/raw/b025dfb91b43ea9309ce6ed67e24790ba65d7b67/kube.sh | sudo sh
-IP=`ifconfig ens3 | grep "inet addr" | cut -d ':' -f 2 | cut -d ' ' -f 1`
+IP=`ifconfig eth0 | grep "inet addr" | cut -d ':' -f 2 | cut -d ' ' -f 1`
 sudo kubeadm init --pod-network-cidr=10.244.0.0/16 --apiserver-advertise-address=$IP --kubernetes-version stable-1.8 > startup_log.txt
 
 #su ubuntu
