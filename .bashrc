@@ -246,4 +246,5 @@ alias fclrm='fc list | an 1 | xargs faas-cli remove'
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
+alias fcdl='curl -sL https://cli.openfaas.com | sudo sh'
 
