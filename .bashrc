@@ -248,3 +248,6 @@ alias fclrm='fc list | an 1 | xargs faas-cli remove'
 
 alias fcdl='curl -sL https://cli.openfaas.com | sudo sh'
 
+alias kgp='kubectl get pods'
+alias kdp='kubectl describe pod'
+
