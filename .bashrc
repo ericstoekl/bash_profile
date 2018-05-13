@@ -2,6 +2,8 @@
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # for examples
 alias c='clear'
+alias le='xset led'
+le
 #redshift &
 
 # If not running interactively, don't do anything
@@ -58,11 +60,12 @@ if [ -n "$force_color_prompt" ]; then
     fi
 fi
 
-if [ "$color_prompt" = yes ]; then
-    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
-else
-    PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
-fi
+#if [ "$color_prompt" = yes ]; then
+#    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
+#else
+#    PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
+#fi
+PS1='\w \$ '
 unset color_prompt force_color_prompt
 
 # If this is an xterm set the title to user@host:dir
@@ -94,6 +97,9 @@ alias ll='ls -alF'
 alias la='ls -A'
 alias l='ls -CF'
 
+# Add an "alert" alias for long running commands.  Use like so:
+#   sleep 10; alert
+alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 
 # Alias definitions.
 # You may want to put all your additions into a separate file like
@@ -104,10 +110,29 @@ if [ -f ~/.bash_aliases ]; then
     . ~/.bash_aliases
 fi
 
+# enable programmable completion features (you don't need to enable
+# this, if it's already enabled in /etc/bash.bashrc and /etc/profile
+# sources /etc/bash.bashrc).
+if ! shopt -oq posix; then
+  if [ -f /usr/share/bash-completion/bash_completion ]; then
+    . /usr/share/bash-completion/bash_completion
+  elif [ -f /etc/bash_completion ]; then
+    . /etc/bash_completion
+  fi
+fi
+
 # BASH
 
+alias luu='ls -al /dev/disk/by-uuid/'
+function resetwifi_func () {
+    sudo modprobe -r 8188eu
+    sudo insmod ~/rtl8188eu/8188eu.ko
+}
+alias resetwifi='resetwifi_func'
 alias lddg='links duckduckgo.com'
 alias fb='./build.sh; mv ./faas-cli ~/github/go/bin/faas-cli'
+alias mvf='mv faas-cli ~/github/go/bin/faas-cli'
+alias fbt='go test $(go list ./... | grep -v /vendor/ | grep -v /template/) -cover'
 alias fzff='find * -type f | fzf'
 alias fzfo='vim `fzff`'
 alias fn='find . -name '
@@ -154,7 +179,15 @@ alias sb='od -c -b'
 
 alias curlp='curl --data-binary @-'
 
+alias vimt='vim -u ~/.vimrc.go'
+export VISUAL=vim
+export EDITOR="$VISUAL"
 
+alias naut='nautilus `pwd`'
+
+#GPG
+alias gpgl='gpg --list-secret-keys --keyid-format LONG'
+alias gpgla='gpg2 --list-keys --keyid-format LONG'
 
 # DOCKER
 
@@ -165,6 +198,7 @@ function docker_stk_dep () {
 }
 alias dstkd='docker_stk_dep'
 alias dstk='docker stack ps'
+alias dstkrm='docker stack rm func'
 
 function docker_attach() {
     docker exec -i -t $1 /bin/$2
@@ -172,9 +206,7 @@ function docker_attach() {
 alias da='docker_attach'
 alias dsl='docker service logs'
 alias ds='docker service ls'
-alias dsg='docker service ls | grep'
 alias dcl='docker container ls'
-alias dcg='docker container ls | grep'
 alias drms='docker service rm `docker service ls -q`'
 alias di='docker images'
 
@@ -193,33 +225,52 @@ function docker_unset_env() {
 }
 alias due='docker_unset_env'
 
+alias dclean='docker rm $(docker ps -q -f status=exited)'
+
 # GIT
 
 export GIT_EDITOR='vim'
 
+function git_clone() {
+    git clone https://github.com/$1
+}
+alias gcc='git_clone'
 alias gbl='git branch -l'
 alias gcnb='git checkout -b'
-function git_checkout_remote_branch () {
-	git checkout -b $1 origin/$1
-}
-alias gcnbr='git_checkout_remote_branch'
 alias gs='git status'
 alias gsh='git show'
 alias gl='git log'
+
+function git_log_deleted () {
+    git log --all --full-history -- $1
+}
+alias gld='git_log_deleted'
+
 alias gd='git diff'
 alias gc='git checkout'
 alias ga='git add'
 alias gpu='git pull'
 alias gpum='git pull upstream master'
+function git_remote_add_upstream () {
+    git remote add upstream https://github.com/$1.git
+}
+alias grau='git_remote_add_upstream'
 alias gcl='git clean -i'
+alias gcld='git clean -d -f'
 alias glf='git diff-tree --no-commit-id --name-status -r'
+function git_create_repo () {
+    curl -u 'ericstoekl' https://api.github.com/user/repos -d "{\"name\":\"$1\"}"
+    git remote add origin git@github.com:ericstoekl/$1.git
+    git push origin master
+}
+alias gcr='git_create_repo'
 alias gcbn='git rev-parse --abbrev-ref HEAD'
 alias gpo='git push --set-upstream origin `gcbn`'
 alias gcm='git commit'
 
 function git_clonetofork () {
     git remote rename origin upstream
-    git remote add origin https://github.com/ems5311/$1
+    git remote add origin https://github.com/ericstoekl/$1
 }
 alias gclf='git_clonetofork'
 
@@ -232,9 +283,11 @@ alias gcd='cd /home/s/github/go/src/github.com'
 export GOPATH=$HOME/github/go
 export GOROOT=/usr/local/go
 export PATH=$GOROOT/bin:$GOPATH/bin:$PATH
+export PATH="$PATH:/home/s/istio-0.5.0/bin"
 
 # FAAS
 
+alias faas='/usr/local/bin/faas-cli'
 alias fcb='faas-cli build -f'
 alias fcd='faas-cli deploy -f'
 alias fc='faas-cli'
@@ -246,8 +299,42 @@ alias fclrm='fc list | an 1 | xargs faas-cli remove'
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
-alias fcdl='curl -sL https://cli.openfaas.com | sudo sh'
 
-alias kgp='kubectl get pods'
-alias kdp='kubectl describe pod'
+#STARTUP
 
+#Request spot fleet:
+function awsspot_func () {
+    spotFleet=`aws ec2 request-spot-fleet --spot-fleet-request-config file://$1 | jq '.SpotFleetRequestId' | sed -e 's/^"//' -e 's/"$//'`
+    sleep 20
+    instanceIds=`aws ec2 describe-spot-fleet-instances --spot-fleet-request-id $spotFleet | jq '.ActiveInstances[0].InstanceId' | sed -e 's/^"//' -e 's/"$//'`
+    aws ec2 describe-instances --instance-ids $instanceIds | jq '.[][0].Instances[0].PublicIpAddress'
+}
+alias awsspot='awsspot_func'
+
+# KUBERNETES
+alias kc='kubectl'
+alias kgp='kc get pods'
+alias kdp='kc describe pod'
+alias kga='kubectl get all'
+alias kgas='kga -n kube-system'
+alias kgs='kc get svc'
+alias kd='kubectl describe'
+alias kgn='kubectl get ns'
+alias kl='kubectl logs'
+
+# OTHER
+
+function redshiftkill () {
+    pid=`ps aux | pgrep redshift`
+    kill $pid
+}
+alias rsk='redshiftkill'
+
+#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+export SDKMAN_DIR="/home/s/.sdkman"
+[[ -s "/home/s/.sdkman/bin/sdkman-init.sh" ]] && source "/home/s/.sdkman/bin/sdkman-init.sh"
+
+function killvbox () {
+    vboxmanage startvm $1 --type emergencystop
+}
+alias kvb='killvbox'
